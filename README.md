@@ -1,1 +1,325 @@
 # Cost-cal.-Babo-Bear-rev.1
+
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Milk Tea Cost Calculator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 10px;
+      background: #121212;
+      color: #eee;
+    }
+    .container {
+      max-width: 420px;
+      margin: auto;
+    }
+    h2 {
+      text-align: center;
+      color: #4CAF50;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      background: #1e1e1e;
+      padding: 15px;
+      border-radius: 12px;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.5);
+    }
+    label {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.9rem;
+    }
+    .input-wrap {
+      display: flex;
+      align-items: center;
+      flex: 1;
+      justify-content: space-between;
+    }
+    input {
+      padding: 10px;
+      border: 1px solid #333;
+      border-radius: 8px;
+      background: #2a2a2a;
+      color: #fff;
+      font-size: 1rem;
+      width: 100px;
+      text-align: right;
+    }
+    input:focus {
+      outline: 2px solid #4CAF50;
+    }
+    .price-inline {
+      margin-left: 10px;
+      min-width: 80px;
+      text-align: right;
+      font-size: 0.9rem;
+      color: #aaa;
+    }
+    button {
+      padding: 12px;
+      background: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+    button:hover {
+      background: #45a049;
+    }
+    #result, #dashboard {
+      background: #1e1e1e;
+      padding: 15px;
+      border-radius: 12px;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.5);
+      margin-top: 15px;
+    }
+    .item-row {
+      display: flex;
+      justify-content: space-between;
+      margin: 5px 0;
+      font-size: 0.9rem;
+    }
+    .progress {
+      background: #333;
+      border-radius: 5px;
+      overflow: hidden;
+      height: 10px;
+      margin-top: 3px;
+    }
+    .progress-bar {
+      height: 100%;
+    }
+    /* Popup Keypad */
+    .keypad-overlay {
+      position: fixed;
+      bottom: -100%;
+      left: 0;
+      right: 0;
+      background: #1c1c1c;
+      border-top-left-radius: 15px;
+      border-top-right-radius: 15px;
+      box-shadow: 0 -4px 10px rgba(0,0,0,0.6);
+      display: block;
+      padding: 15px;
+      z-index: 1000;
+      transition: bottom 0.3s ease-in-out;
+    }
+    .keypad {
+      display: grid;
+      grid-template-columns: repeat(3,1fr);
+      gap: 10px;
+    }
+    .keypad button {
+      padding: 18px;
+      font-size: 1.2rem;
+      border: none;
+      border-radius: 10px;
+      background: #333;
+      color: #fff;
+      cursor: pointer;
+    }
+    .keypad button:hover {
+      background: #4CAF50;
+    }
+    .keypad-footer {
+      display: flex;
+      gap: 10px;
+      margin-top: 12px;
+    }
+    .keypad-footer button {
+      flex: 1;
+      background: #4CAF50;
+    }
+    .keypad-footer .delete-btn {
+      background: #e53935;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>คำนวณต้นทุนร้านชานมไข่มุก</h2>
+    <form id="costForm">
+      <label>ชา (12 บาท/ขวด)
+        <div class="input-wrap">
+          <input type="text" id="tea" readonly>
+          <span class="price-inline" id="price-tea"></span>
+        </div>
+      </label>
+      <label>ชีส (ใส่ราคาเลย)
+        <div class="input-wrap">
+          <input type="text" id="cheese" readonly>
+          <span class="price-inline" id="price-cheese"></span>
+        </div>
+      </label>
+      <label>น้ำแข็ง (ใส่ราคาเลย)
+        <div class="input-wrap">
+          <input type="text" id="ice" readonly>
+          <span class="price-inline" id="price-ice"></span>
+        </div>
+      </label>
+      <label>ไข่มุก (60 บาท/กก.)
+        <div class="input-wrap">
+          <input type="text" id="pearl" readonly>
+          <span class="price-inline" id="price-pearl"></span>
+        </div>
+      </label>
+      <label>ค่าที่ (ใส่ราคาเลย)
+        <div class="input-wrap">
+          <input type="text" id="rent" readonly>
+          <span class="price-inline" id="price-rent"></span>
+        </div>
+      </label>
+      <label>นมสด (100 บาท/ขวด)
+        <div class="input-wrap">
+          <input type="text" id="milk" readonly>
+          <span class="price-inline" id="price-milk"></span>
+        </div>
+      </label>
+      <label>แก้ว (3 บาท/แก้ว)
+        <div class="input-wrap">
+          <input type="text" id="cup" readonly>
+          <span class="price-inline" id="price-cup"></span>
+        </div>
+      </label>
+      <label>บุกบราว์ (ใส่ราคาเลย)
+        <div class="input-wrap">
+          <input type="text" id="brown" readonly>
+          <span class="price-inline" id="price-brown"></span>
+        </div>
+      </label>
+      <label>ไมโล (ใส่ราคาเลย)
+        <div class="input-wrap">
+          <input type="text" id="milo" readonly>
+          <span class="price-inline" id="price-milo"></span>
+        </div>
+      </label>
+      <label>โกโก้ (ใส่ราคาเลย)
+        <div class="input-wrap">
+          <input type="text" id="cocoa" readonly>
+          <span class="price-inline" id="price-cocoa"></span>
+        </div>
+      </label>
+      <button type="button" onclick="calculateCost()">คำนวณ</button>
+      <button type="reset" onclick="resetAll()">รีเซ็ต</button>
+    </form>
+
+    <div id="result"></div>
+    <div id="dashboard"></div>
+  </div>
+
+  <!-- Numeric Keypad Popup -->
+  <div class="keypad-overlay" id="keypad">
+    <div class="keypad" id="keypad-buttons"></div>
+    <div class="keypad-footer">
+      <button class="delete-btn" onclick="deleteDigit()">ลบ</button>
+      <button onclick="closeKeypad()">ตกลง</button>
+    </div>
+  </div>
+
+  <script>
+    let activeInput = null;
+    const unitPrice = {
+      tea: 12, pearl: 60, milk: 100, cup: 3,
+      cheese: 1, ice: 1, rent: 1, brown: 1, milo: 1, cocoa: 1
+    };
+    const colors = [
+      "linear-gradient(90deg,#4CAF50,#81C784)",
+      "linear-gradient(90deg,#2196F3,#64B5F6)",
+      "linear-gradient(90deg,#9C27B0,#BA68C8)",
+      "linear-gradient(90deg,#FF5722,#FF8A65)",
+      "linear-gradient(90deg,#00BCD4,#4DD0E1)",
+      "linear-gradient(90deg,#FFC107,#FFD54F)",
+      "linear-gradient(90deg,#E91E63,#F06292)",
+      "linear-gradient(90deg,#8BC34A,#AED581)",
+      "linear-gradient(90deg,#795548,#A1887F)",
+      "linear-gradient(90deg,#607D8B,#90A4AE)"
+    ];
+
+    // Build keypad
+    const keypadNumbers = [1,2,3,4,5,6,7,8,9,0];
+    let keypadHTML = '';
+    keypadNumbers.forEach(n=>{
+      keypadHTML += `<button onclick="pressDigit(${n})">${n}</button>`;
+    });
+    document.getElementById('keypad-buttons').innerHTML = keypadHTML;
+
+    document.querySelectorAll('input').forEach(input=>{
+      input.addEventListener('click',()=>{
+        activeInput = input;
+        document.getElementById('keypad').style.bottom = "0";
+      });
+    });
+
+    function pressDigit(num){
+      if(activeInput){
+        activeInput.value = (activeInput.value||'') + num;
+        showPrice(activeInput.id);
+      }
+    }
+
+    function deleteDigit(){
+      if(activeInput){
+        activeInput.value = activeInput.value.slice(0,-1);
+        showPrice(activeInput.id);
+      }
+    }
+
+    function closeKeypad(){
+      document.getElementById('keypad').style.bottom = "-100%";
+      activeInput = null;
+    }
+
+    function showPrice(id){
+      let qty = parseInt(document.getElementById(id).value)||0;
+      let price = unitPrice[id]*qty;
+      document.getElementById('price-'+id).innerText = qty>0 ? `${price} บ.` : '';
+    }
+
+    function calculateCost(){
+      let tea = (parseInt(document.getElementById('tea').value)||0) * 12;
+      let cheese = (parseInt(document.getElementById('cheese').value)||0);
+      let ice = (parseInt(document.getElementById('ice').value)||0);
+      let pearl = (parseInt(document.getElementById('pearl').value)||0) * 60;
+      let rent = (parseInt(document.getElementById('rent').value)||0);
+      let milk = (parseInt(document.getElementById('milk').value)||0) * 100;
+      let cup = (parseInt(document.getElementById('cup').value)||0) * 3;
+      let brown = (parseInt(document.getElementById('brown').value)||0);
+      let milo = (parseInt(document.getElementById('milo').value)||0);
+      let cocoa = (parseInt(document.getElementById('cocoa').value)||0);
+
+      let total = tea+cheese+ice+pearl+rent+milk+cup+brown+milo+cocoa;
+
+      let today = new Date();
+      let dateStr = today.toLocaleDateString('th-TH',{year:'numeric',month:'long',day:'numeric'});
+      document.getElementById('result').innerHTML = `<b>รวมต้นทุนทั้งหมด:</b> ${total.toFixed(2)} บาท<br><b>วันที่:</b> ${dateStr}`;
+
+      let breakdown = {ชา:tea,ชีส:cheese,น้ำแข็ง:ice,ไข่มุก:pearl,ค่าที่:rent,นมสด:milk,แก้ว:cup,บุกบราว์:brown,ไมโล:milo,โกโก้:cocoa};
+      let dashHTML = '<h3>Dashboard</h3>';
+      let idx = 0;
+      for(let item in breakdown){
+        let cost = breakdown[item];
+        let percent = total ? (cost/total*100).toFixed(1):0;
+        dashHTML += `<div class='item-row'><span>${item}</span><span>${cost} บาท (${percent}%)</span></div>`;
+        dashHTML += `<div class='progress'><div class='progress-bar' style='width:${percent}%;background:${colors[idx%colors.length]}'></div></div>`;
+        idx++;
+      }
+      document.getElementById('dashboard').innerHTML = dashHTML;
+    }
+
+    function resetAll(){
+      document.querySelectorAll('input').forEach(i=>i.value='');
+      document.querySelectorAll('.price-inline').forEach(p=>p.innerText='');
+      document.getElementById('result').innerHTML='';
+      document.getElementById('dashboard').innerHTML='';
+    }
+  </script>
+</body>
+</html>
