@@ -1,4 +1,4 @@
-# Cost-cal.-Babo-Bear-rev.1
+# Cost-cal.-Babo-Bear
 
 <html lang="th">
 <head>
