@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Milk Tea Cost Calculator</title>
+  <style>
+    body {
+      font-family: "Segoe UI", Arial, sans-serif;
+      margin: 0;
+      padding: 10px;
+      background: #121212;
+      color: #f0f0f0;
+    }
+    .container {
+      max-width: 420px;
+      margin: auto;
+      padding: 15px;
+    }
+    h2 {
+      text-align: center;
+      color: #00e0ff;
+      margin-bottom: 20px;
+      text-shadow: 0 0 6px rgba(0,224,255,0.6);
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      background: #1e1e1e;
+      padding: 18px;
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(0,224,255,0.15);
+    }
+    label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.95rem;
+    }
+    .input-wrap {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex: 1;
+    }
+    input {
+      padding: 8px;
+      border: 1px solid #333;
+      border-radius: 6px;
+      width: 80px;
+      font-size: 1rem;
+      background: #2a2a2a;
+      color: #f0f0f0;
+      text-align: center;
+    }
+    input:focus {
+      outline: none;
+      border-color: #00e0ff;
+      box-shadow: 0 0 6px #00e0ff;
+    }
+    .price-tag {
+      min-width: 80px;
+      text-align: right;
+      font-size: 0.9rem;
+      color: #00ff88;
+    }
+    button {
+      padding: 14px;
+      background: linear-gradient(90deg,#00e0ff,#00ff88);
+      color: #000;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: bold;
+      width: 100%;
+      text-transform: uppercase;
+      transition: transform 0.15s ease;
+    }
+    button:hover {
+      transform: scale(1.03);
+    }
+    #result, #dashboard {
+      background: #1e1e1e;
+      padding: 18px;
+      border-radius: 12px;
+      box-shadow: 0 0 12px rgba(0,224,255,0.1);
+      margin-top: 20px;
+      font-size: 0.95rem;
+    }
+    #result b {
+      color: #00ff88;
+    }
+    #dashboard h3 {
+      margin-top: 0;
+      color: #00e0ff;
+      text-align: center;
+      margin-bottom: 12px;
+      text-shadow: 0 0 6px rgba(0,224,255,0.6);
+    }
+    .item-row {
+      display: flex;
+      justify-content: space-between;
+      margin: 6px 0;
+      font-size: 0.9rem;
+    }
+    .progress {
+      background: #333;
+      border-radius: 6px;
+      overflow: hidden;
+      height: 12px;
+      margin-bottom: 10px;
+    }
+    .progress-bar {
+      height: 100%;
+      transition: width 0.4s ease;
+      background: linear-gradient(90deg,#00e0ff,#00ff88);
+      box-shadow: 0 0 10px rgba(0,255,136,0.7);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>คำนวณต้นทุนร้านชานมไข่มุก</h2>
+    <form id="costForm">
+      <label>ชา (12 บาท/ขวด)
+        <div class="input-wrap">
+          <input type="number" id="tea" min="0" value="0" oninput="updatePrice('tea',12)">
+          <span class="price-tag" id="price-tea">0 บาท</span>
+        </div>
+      </label>
+      <label>ชีส (ใส่ราคาเลย)
+        <div class="input-wrap">
+          <input type="number" id="cheese" min="0" value="0" oninput="updatePrice('cheese',1,true)">
+          <span class="price-tag" id="price-cheese">0 บาท</span>
+        </div>
+      </label>
+      <label>น้ำแข็ง (ใส่ราคาเลย)
+        <div class="input-wrap">
+          <input type="number" id="ice" min="0" value="0" oninput="updatePrice('ice',1,true)">
+          <span class="price-tag" id="price-ice">0 บาท</span>
+        </div>
+      </label>
+      <label>ไข่มุก (60 บาท/กก.)
+        <div class="input-wrap">
+          <input type="number" id="pearl" min="0" value="0" oninput="updatePrice('pearl',60)">
+          <span class="price-tag" id="price-pearl">0 บาท</span>
+        </div>
+      </label>
+      <label>ค่าที่ (ใส่ราคาเลย)
+        <div class="input-wrap">
+          <input type="number" id="rent" min="0" value="0" oninput="updatePrice('rent',1,true)">
+          <span class="price-tag" id="price-rent">0 บาท</span>
+        </div>
+      </label>
+      <label>นมสด (100 บาท/ขวด)
+        <div class="input-wrap">
+          <input type="number" id="milk" min="0" value="0" oninput="updatePrice('milk',100)">
+          <span class="price-tag" id="price-milk">0 บาท</span>
+        </div>
+      </label>
+      <label>แก้ว (3 บาท/แก้ว)
+        <div class="input-wrap">
+          <input type="number" id="cup" min="0" value="0" oninput="updatePrice('cup',3)">
+          <span class="price-tag" id="price-cup">0 บาท</span>
+        </div>
+      </label>
+      <label>บุกบราว์ (ใส่ราคาเลย)
+        <div class="input-wrap">
+          <input type="number" id="brown" min="0" value="0" oninput="updatePrice('brown',1,true)">
+          <span class="price-tag" id="price-brown">0 บาท</span>
+        </div>
+      </label>
+      <label>ไมโล (ใส่ราคาเลย)
+        <div class="input-wrap">
+          <input type="number" id="milo" min="0" value="0" oninput="updatePrice('milo',1,true)">
+          <span class="price-tag" id="price-milo">0 บาท</span>
+        </div>
+      </label>
+      <label>โกโก้ (ใส่ราคาเลย)
+        <div class="input-wrap">
+          <input type="number" id="cocoa" min="0" value="0" oninput="updatePrice('cocoa',1,true)">
+          <span class="price-tag" id="price-cocoa">0 บาท</span>
+        </div>
+      </label>
+
+      <button type="button" onclick="calculateCost()">คำนวณ</button>
+      <button type="reset" onclick="resetPrices()">รีเซ็ต</button>
+    </form>
+
+    <div id="result"></div>
+    <div id="dashboard"></div>
+  </div>
+
+  <script>
+    function updatePrice(id, unitPrice, direct=false) {
+      let val = parseFloat(document.getElementById(id).value) || 0;
+      let price = direct ? val : val * unitPrice;
+      document.getElementById("price-" + id).innerText = price.toLocaleString('th-TH') + " บาท";
+    }
+
+    function resetPrices() {
+      const priceTags = document.querySelectorAll(".price-tag");
+      priceTags.forEach(tag => tag.innerText = "0 บาท");
+      document.getElementById('result').innerHTML = "";
+      document.getElementById('dashboard').innerHTML = "";
+    }
+
+    function calculateCost() {
+      let tea = document.getElementById('tea').value * 12;
+      let cheese = parseFloat(document.getElementById('cheese').value) || 0;
+      let ice = parseFloat(document.getElementById('ice').value) || 0;
+      let pearl = document.getElementById('pearl').value * 60;
+      let rent = parseFloat(document.getElementById('rent').value) || 0;
+      let milk = document.getElementById('milk').value * 100;
+      let cup = document.getElementById('cup').value * 3;
+      let brown = parseFloat(document.getElementById('brown').value) || 0;
+      let milo = parseFloat(document.getElementById('milo').value) || 0;
+      let cocoa = parseFloat(document.getElementById('cocoa').value) || 0;
+
+      let total = tea + cheese + ice + pearl + rent + milk + cup + brown + milo + cocoa;
+
+      let today = new Date();
+      let dateStr = today.toLocaleDateString('th-TH', {
+        year: 'numeric', month: 'long', day: 'numeric'
+      });
+
+      document.getElementById('result').innerHTML = 
+        `<b>รวมต้นทุนทั้งหมด:</b> ${total.toLocaleString('th-TH',{minimumFractionDigits:2})} บาท<br>
+         <b>วันที่:</b> ${dateStr}`;
+
+      let breakdown = {
+        'ชา': tea,
+        'ชีส': cheese,
+        'น้ำแข็ง': ice,
+        'ไข่มุก': pearl,
+        'ค่าที่': rent,
+        'นมสด': milk,
+        'แก้ว': cup,
+        'บุกบราว์': brown,
+        'ไมโล': milo,
+        'โกโก้': cocoa
+      };
+
+      let dashHTML = '<h3>Dashboard</h3>';
+      for (let item in breakdown) {
+        let cost = breakdown[item];
+        let percent = total ? (cost / total * 100).toFixed(1) : 0;
+        dashHTML += `<div class='item-row'><span>${item}</span><span>${cost.toLocaleString('th-TH')} บาท (${percent}%)</span></div>`;
+        dashHTML += `<div class='progress'><div class='progress-bar' style='width:${percent}%'></div></div>`;
+      }
+      document.getElementById('dashboard').innerHTML = dashHTML;
+    }
+  </script>
+</body>
+</html>
